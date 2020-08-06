@@ -2,7 +2,7 @@
 
 ### Requirements
 
-You need to have a server and a domain linked to it. [Docker and Docker-compose](https://docs.docker.com/engine/install/ubuntu/) needs to be installed. This script is tested on Ubuntu 18.04.
+You need to have a server and a domain linked to it. [Docker and Docker-compose](https://docs.docker.com/engine/install/ubuntu/) needs to be installed, but this can also be handled by the install script. This script is tested on Ubuntu 18.04.
 
 ### Installation
 
@@ -11,34 +11,35 @@ This repository aims to deploy a mumble-server on your machine in a containerize
 To deploy the mumble-server, just clone the repository and run the install script. A secure admin password will be generated.
 
 ```bash
-./install.sh
+sudo ./install.sh
 ```
 You can change the settings in the file `.env`, as described [here](https://github.com/sudoforge/docker-images/tree/master/mumble-server). When done, you can startup the docker-compose file with:
 
 ```bash
-sudo docker-compose up -d
+docker-compose up -d
 ```
 
 Even on a restart of the host system, the mumble-server will also restart. You can shut down the server again with:
 
 ```bash
-sudo docker-compose down
+docker-compose down
 ```
 
 ### Syntax
 
 ```bash
-Usage: ./install.sh -[s|c|r|e|d|h]
+Usage: ./install.sh -[p|s|c|r|e|d|h]
 
-   -s,    Setup environment
-   -c,    (Re)generate letsencrypt certificates
-   -r,    Renew certificates
-   -e,    Enable cronjob to renew certificates
-   -d,    Disable cronjob to renew certificates
-   -h,    Print this help text
+   -p,      Install prerequisites (docker, docker-compose)
+   -s,      Setup environment
+   -c,      (Re)generate letsencrypt certificates
+   -r,      Renew certificates
+   -e,      Enable cronjob to renew certificates
+   -d,      Disable cronjob to renew certificates
+   -h,      Print this help text
 
 If the script will be called without parameters, it will run:
-    ./install.sh -s -c -e
+    ./install.sh -p -s -c -e
 ```
 
 ### References
