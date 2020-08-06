@@ -68,7 +68,7 @@ certificates() {
         docker-compose down
         sleep 1
         cd letsencrypt
-        docker run --rm -ti -v $PWD/log/:/var/log/letsencrypt/ -v $PWD/etc/:/etc/letsencrypt/ -p 80:80 certbot/certbot certonly --standalone -d "${DOMAIN}"
+        sudo docker run --rm -ti -v $PWD/log/:/var/log/letsencrypt/ -v $PWD/etc/:/etc/letsencrypt/ -p 80:80 certbot/certbot certonly --standalone -d "${DOMAIN}"
         sudo service nginx start
 
         cd "$DIR"
@@ -88,7 +88,7 @@ renew() {
     docker-compose down
     sleep 1
     cd letsencrypt
-    docker run --rm -ti -v $PWD/log/:/var/log/letsencrypt/ -v $PWD/etc/:/etc/letsencrypt/ -p 80:80 -p 443:443 certbot/certbot renew
+    sudo docker run --rm -ti -v $PWD/log/:/var/log/letsencrypt/ -v $PWD/etc/:/etc/letsencrypt/ -p 80:80 -p 443:443 certbot/certbot renew
     sudo service nginx start
 
     cd "$DIR"
