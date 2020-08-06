@@ -1,0 +1,13 @@
+version: '3.1'
+services:
+  mumble:
+    image: sudoforge/mumble-server:latest
+    restart: always
+    container_name: ${COMPOSE_PROJECT_NAME}
+    ports:
+      - '${TCPPORT}:64738/tcp'
+      - '${UDPPORT}:64738/udp'
+    env_file:
+      - .env
+    volumes:
+      - ./data:/data
