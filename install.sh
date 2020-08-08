@@ -1,5 +1,9 @@
 #!/bin/bash
 ## Define some functions
+
+SCRIPT=$(readlink -f "$0")
+DIR=$(dirname "$SSCRIPT")
+
 function generatePassword() {
     openssl rand -hex 16
 }
@@ -35,20 +39,24 @@ environment() {
         SUPERUSER_PASSWORD=$(generatePassword)
     fi
 
-    read -e -p "Domain: " -i "$DOMAIN" DOMAIN
+    read -e -p "Mumble-Domain: " -i "$DOMAIN" DOMAIN
+    read -e -p "Web-Domain: " -i "$WEBDOMAIN" WEBDOMAIN
     read -e -p "Servername: " -i "$MUMBLE_REGISTERNAME" MUMBLE_REGISTERNAME
     read -e -p "Admin Password: " -i "$SUPERUSER_PASSWORD" SUPERUSER_PASSWORD
     read -e -p "Allowed users: " -i "$MUMBLE_USERS" MUMBLE_USERS
     read -e -p "TCPPORT: " -i "$TCPPORT" TCPPORT
     read -e -p "UDPPORT: " -i "$TCPPORT" UDPPORT
+    read -e -p "WEBPORT: " -i "$WEBPORT" WEBPORT
 
     sed -i \
         -e "s#SUPERUSER_PASSWORD=.*#SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD}#g" \
         -e "s#DOMAIN=.*#DOMAIN=${DOMAIN}#g" \
+        -e "s#WEBDOMAIN=.*#WEBDOMAIN=${WEBDOMAIN}#g" \
         -e "s#MUMBLE_REGISTERNAME=.*#MUMBLE_REGISTERNAME=${MUMBLE_REGISTERNAME}#g" \
         -e "s#USERS=.*#MUMBLE_USERS=${MUMBLE_USERS}#g" \
         -e "s#TCPPORT=.*#TCPPORT=${TCPPORT}#g" \
         -e "s#UDPPORT=.*#UDPPORT=${UDPPORT}#g" \
+        -e "s#WEBPORT=.*#WEBPORT=${WEBPORT}#g" \
         "$(dirname "$0")/.env"
 }
 
@@ -135,6 +143,26 @@ prerequisites() {
     newgrp docker
 }
 
+nginxit() {
+cd "$DIR"
+if [ ! -f .env ]; then
+        echo -e "No .env file found." 
+else
+    cp nginx.example nginx
+    source .env
+
+    sed -i \
+        -e "s/TCPPORT/${WEBPORT}/g" \
+        -e "s/MYDOMAIN/${WEBDOMAIN}/g" \
+        "$(dirname "$0")/nginx"
+
+    sudo cp nginx /etc/nginx/sites-available/"${WEBDOMAIN}"
+    rm nginx
+    sudo ln -s /etc/nginx/sites-available/"${WEBDOMAIN}" /etc/nginx/sites-enabled/"${WEBDOMAIN}"
+    sudo certbot --nginx --expand -d "${WEBDOMAIN}"
+fi
+}
+
 # ###### Parsing arguments
 
 #Usage print
@@ -147,6 +175,7 @@ usage() {
    -r,      Renew certificates
    -e,      Enable cronjob to renew certificates
    -d,      Disable cronjob to renew certificates
+   -n,      Generate nginx virtual host for mumble webserver
    -h,      Print this help text
 
 If the script will be called without parameters, it will run:
@@ -155,7 +184,7 @@ If the script will be called without parameters, it will run:
     exit 1
 }
 
-while getopts ':pscredh' opt
+while getopts ':pscredn' opt
 #putting : in the beginnnig suppresses the errors for invalid options
 do
 case "$opt" in
@@ -171,7 +200,7 @@ case "$opt" in
        ;;
    'd')disablecron;
        ;;
-   'h')usage;
+   'n')nginxit;
        ;;
     *) usage;
        ;;
