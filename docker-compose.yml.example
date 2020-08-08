@@ -13,7 +13,7 @@ services:
       - .env
     volumes:
       - ./data:/data
- mumbleweb:
+  mumbleweb:
     image: tna76874/mumble-web
     container_name: mumbleweb
     environment:
@@ -21,7 +21,7 @@ services:
     ports:
       - 127.0.0.1:${WEBPORT}:8080
     restart: always
- websockify:
+  websockify:
     image: efrecon/websockify
     container_name: websockify
     restart: always
