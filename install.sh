@@ -145,6 +145,14 @@ prerequisites() {
 
 nginxit() {
 cd "$DIR"
+if $(confirm "--Install nginx and certbot?") ; then
+    sudo apt-get update
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install software-properties-common nginx -qy
+    sudo DEBIAN_FRONTEND=noninteractive add-apt-repository universe
+    sudo DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:certbot/certbot
+    sudo apt-get update
+    sudo DEBIAN_FRONTEND=noninteractive apt-get install certbot python3-certbot-nginx -qy
+fi
 if [ ! -f .env ]; then
         echo -e "No .env file found." 
 else
@@ -167,7 +175,7 @@ fi
 
 #Usage print
 usage() {
-    echo "Usage: $0 -[p|s|c|r|e|d|h]" >&2
+    echo "Usage: $0 -[p|s|c|r|e|d|n|h]" >&2
     echo "
    -p,      Install prerequisites (docker, docker-compose)
    -s,      Setup environment
@@ -179,7 +187,7 @@ usage() {
    -h,      Print this help text
 
 If the script will be called without parameters, it will run:
-    $0 -p -s -c -e``
+    $0 -p -s -c -e -n
    ">&2
     exit 1
 }
@@ -208,14 +216,25 @@ esac
 done
 if [ $OPTIND -eq 1 ]; then
     if $(confirm "Install prerequisites (docker, docker-compose)?") ; then
+        cd "$DIR"
         prerequisites
     fi
     if $(confirm "Setup environments?") ; then
+        cd "$DIR"
         environment
     fi
     if $(confirm "(Re)generate letsencrypt certificates and enable cron?") ; then
+        cd "$DIR"
         certificates
         enablecron
+    fi
+    if $(confirm "Enable mumble web service?") ; then
+        cd "$DIR"
+        nginxit
+    fi
+    if $(confirm "Startup docker-compose?") ; then
+        cd "$DIR"
+        docker-compose up -d
     fi
 fi
 

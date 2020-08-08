@@ -1,4 +1,6 @@
-# Docker Mumble-Server with letsencrypt
+# MUMBLE
+
+> Docker Mumble-Server with letsencrypt and a HTML web client
 
 ### Requirements
 
@@ -25,10 +27,20 @@ Even on a restart of the host system, the mumble-server will also restart. You c
 docker-compose down
 ```
 
+### HTML Client
+
+Included is the optional [HTML web client ](https://github.com/Johni0702/mumble-web), that can be activated by generating the nginx virtual host:
+
+```bash
+sudo ./install.sh -n
+```
+
+
+
 ### Syntax
 
 ```bash
-Usage: ./install.sh -[p|s|c|r|e|d|h]
+Usage: ./install.sh -[p|s|c|r|e|d|n|h]
 
    -p,      Install prerequisites (docker, docker-compose)
    -s,      Setup environment
@@ -36,13 +48,17 @@ Usage: ./install.sh -[p|s|c|r|e|d|h]
    -r,      Renew certificates
    -e,      Enable cronjob to renew certificates
    -d,      Disable cronjob to renew certificates
+   -n,      Generate nginx virtual host for mumble webserver
    -h,      Print this help text
 
 If the script will be called without parameters, it will run:
-    ./install.sh -p -s -c -e
+    ./install.sh -p -s -c -e -n
 ```
 
 ### References
 
 [Mumble wiki](https://wiki.mumble.info/wiki/3rd_Party_Applications) 
-[Docker code on github](https://github.com/sudoforge/docker-images/tree/master/mumble-server) 
+
+[mumble server](https://github.com/sudoforge/docker-images/tree/master/mumble-server) 
+
+[mumble web](https://github.com/Johni0702/mumble-web)
