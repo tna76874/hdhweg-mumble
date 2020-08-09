@@ -13,6 +13,8 @@ services:
       - .env
     volumes:
       - ./data:/data
+      - /etc/letsencrypt/live/${WEBDOMAIN}/fullchain.pem:/etc/letsencrypt/live/${WEBDOMAIN}/fullchain.pem
+      - /etc/letsencrypt/live/${WEBDOMAIN}/privkey.pem:/etc/letsencrypt/live/${WEBDOMAIN}/privkey.pem
   mumbleweb:
     image: tna76874/mumble-web
     container_name: mumbleweb
