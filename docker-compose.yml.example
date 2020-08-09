@@ -11,7 +11,7 @@ services:
       - 64738
     env_file:
       - .env
-  environment:
+    environment:
       - MUMBLE_CERTFILE=/etc/letsencrypt/live/${WEBDOMAIN}/fullchain.pem
       - MUMBLE_KEYFILE=/etc/letsencrypt/live/${WEBDOMAIN}/privkey.pem
     volumes:
