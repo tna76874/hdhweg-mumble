@@ -44,7 +44,6 @@ environment() {
     read -e -p "Admin Password: " -i "$SUPERUSER_PASSWORD" SUPERUSER_PASSWORD
     read -e -p "Allowed users: " -i "$MUMBLE_USERS" MUMBLE_USERS
     read -e -p "TCPPORT: " -i "$TCPPORT" TCPPORT
-    read -e -p "UDPPORT: " -i "$TCPPORT" UDPPORT
     read -e -p "WEBPORT: " -i "$WEBPORT" WEBPORT
 
     sed -i \
@@ -54,7 +53,7 @@ environment() {
         -e "s#MUMBLE_REGISTERNAME=.*#MUMBLE_REGISTERNAME=${MUMBLE_REGISTERNAME}#g" \
         -e "s#USERS=.*#MUMBLE_USERS=${MUMBLE_USERS}#g" \
         -e "s#TCPPORT=.*#TCPPORT=${TCPPORT}#g" \
-        -e "s#UDPPORT=.*#UDPPORT=${UDPPORT}#g" \
+        -e "s#UDPPORT=.*#UDPPORT=${TCPPORT}#g" \
         -e "s#WEBPORT=.*#WEBPORT=${WEBPORT}#g" \
         "$(dirname "$0")/.env"
 }
@@ -196,13 +195,7 @@ case "$opt" in
        ;;
    's')environment;
        ;;
-   'c')certificates;
-       ;;
-   'r')renew;
-       ;; 
-   'e')enablecron;
-       ;;
-   'd')disablecron;
+   'r')disablecron;
        ;;
    'n')nginxit;
        ;;
@@ -219,7 +212,7 @@ if [ $OPTIND -eq 1 ]; then
         cd "$DIR"
         environment
     fi
-    if $(confirm "Enable mumble web service?") ; then
+    if $(confirm "Generate nginx virtual and certificates?") ; then
         cd "$DIR"
         nginxit
     fi
