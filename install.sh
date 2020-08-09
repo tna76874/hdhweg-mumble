@@ -39,8 +39,7 @@ environment() {
         SUPERUSER_PASSWORD=$(generatePassword)
     fi
 
-    read -e -p "Mumble-Domain: " -i "$DOMAIN" DOMAIN
-    read -e -p "Web-Domain: " -i "$WEBDOMAIN" WEBDOMAIN
+    read -e -p "Mumble-Domain: " -i "$WEBDOMAIN" WEBDOMAIN
     read -e -p "Servername: " -i "$MUMBLE_REGISTERNAME" MUMBLE_REGISTERNAME
     read -e -p "Admin Password: " -i "$SUPERUSER_PASSWORD" SUPERUSER_PASSWORD
     read -e -p "Allowed users: " -i "$MUMBLE_USERS" MUMBLE_USERS
@@ -50,7 +49,7 @@ environment() {
 
     sed -i \
         -e "s#SUPERUSER_PASSWORD=.*#SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD}#g" \
-        -e "s#DOMAIN=.*#DOMAIN=${DOMAIN}#g" \
+        -e "s#DOMAIN=.*#DOMAIN=${WEBDOMAIN}#g" \
         -e "s#WEBDOMAIN=.*#WEBDOMAIN=${WEBDOMAIN}#g" \
         -e "s#MUMBLE_REGISTERNAME=.*#MUMBLE_REGISTERNAME=${MUMBLE_REGISTERNAME}#g" \
         -e "s#USERS=.*#MUMBLE_USERS=${MUMBLE_USERS}#g" \
@@ -179,11 +178,8 @@ usage() {
     echo "
    -p,      Install prerequisites (docker, docker-compose)
    -s,      Setup environment
-   -c,      (Re)generate letsencrypt certificates
-   -r,      Renew certificates
-   -e,      Enable cronjob to renew certificates
-   -d,      Disable cronjob to renew certificates
-   -n,      Generate nginx virtual host for mumble webserver
+   -r,      Disable cronjob to renew certificates
+   -n,      Generate nginx virtual and certificates
    -h,      Print this help text
 
 If the script will be called without parameters, it will run:
@@ -222,11 +218,6 @@ if [ $OPTIND -eq 1 ]; then
     if $(confirm "Setup environments?") ; then
         cd "$DIR"
         environment
-    fi
-    if $(confirm "(Re)generate letsencrypt certificates and enable cron?") ; then
-        cd "$DIR"
-        certificates
-        enablecron
     fi
     if $(confirm "Enable mumble web service?") ; then
         cd "$DIR"
