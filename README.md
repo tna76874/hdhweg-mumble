@@ -8,7 +8,7 @@ You need to have a server and a domain linked to it. [Docker and Docker-compose]
 
 ### Installation
 
-This repository aims to deploy a mumble-server on your machine in a containerized docker image. The certtificates for the SSL encryption can either be self-generated (not recommended) or obtained by letsencrypt. The generation of the letsencrypt-certificates will also be handeled by a [docker-instance of certbot](https://github.com/certbot-docker/certbot-docker). Also it is recommended to enable a cronjob for the renewal of the certificates. The method with the docker-certbot has the advantage, that it is independent of other applications running on your server. On the other hand, a system webserver, listening on port 80, has to be shut down while the letsencrypt-certificates are fetched.
+This repository aims to deploy a mumble-server on your machine in a containerized docker image. The certificates for the SSL encryption can either be self-generated (not recommended) or obtained by letsencrypt. 
 
 To deploy the mumble-server, just clone the repository and run the install script. A secure admin password will be generated.
 
@@ -29,10 +29,10 @@ docker-compose down
 
 ### HTML Client
 
-Included is the optional [HTML web client ](https://github.com/Johni0702/mumble-web), that can be activated by generating the nginx virtual host:
+Included is a [HTML web client ](https://github.com/Johni0702/mumble-web). To deactivate the access:
 
 ```bash
-sudo ./install.sh -n
+sudo ./install.sh -d
 ```
 
 
@@ -40,19 +40,17 @@ sudo ./install.sh -n
 ### Syntax
 
 ```bash
-Usage: ./install.sh -[p|s|c|r|e|d|n|h]
+Usage: ./install.sh -[p|s|r|n|d]
 
    -p,      Install prerequisites (docker, docker-compose)
    -s,      Setup environment
-   -c,      (Re)generate letsencrypt certificates
-   -r,      Renew certificates
-   -e,      Enable cronjob to renew certificates
-   -d,      Disable cronjob to renew certificates
-   -n,      Generate nginx virtual host for mumble webserver
+   -r,      Disable cronjob to renew certificates
+   -n,      Generate nginx virtual and certificates
+   -d,      Deactivate access to HTML client
    -h,      Print this help text
 
 If the script will be called without parameters, it will run:
-    ./install.sh -p -s -c -e -n
+    ./install.sh -p -s -n
 ```
 
 ### References

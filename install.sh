@@ -173,25 +173,35 @@ else
 fi
 }
 
+unlinkhtml() {
+if [ ! -f .env ]; then
+        echo -e "No .env file found." 
+else
+    source .env
+    sudo unlink /etc/nginx/sites-enabled/"${WEBDOMAIN}"
+fi
+}
+
 # ###### Parsing arguments
 
 #Usage print
 usage() {
-    echo "Usage: $0 -[p|s|c|r|e|d|n|h]" >&2
+    echo "Usage: $0 -[p|s|r|n|d]" >&2
     echo "
    -p,      Install prerequisites (docker, docker-compose)
    -s,      Setup environment
    -r,      Disable cronjob to renew certificates
    -n,      Generate nginx virtual and certificates
+   -d,      Deactivate access to HTML client
    -h,      Print this help text
 
 If the script will be called without parameters, it will run:
-    $0 -p -s -c -e -n
+    $0 -p -s -n
    ">&2
     exit 1
 }
 
-while getopts ':pscredn' opt
+while getopts ':psrnd' opt
 #putting : in the beginnnig suppresses the errors for invalid options
 do
 case "$opt" in
@@ -202,6 +212,8 @@ case "$opt" in
    'r')disablecron;
        ;;
    'n')nginxit;
+       ;;
+   'd')unlinkhtml;
        ;;
     *) usage;
        ;;
