@@ -165,6 +165,10 @@ else
     sudo cp nginx /etc/nginx/sites-available/"${WEBDOMAIN}"
     rm nginx
     sudo ln -s /etc/nginx/sites-available/"${WEBDOMAIN}" /etc/nginx/sites-enabled/"${WEBDOMAIN}"
+    if $(confirm "--Purge all keys in /etc/letsencrypt/[live|archive]/${WEBDOMAIN}*?") ; then
+        rm -rf /etc/letsencrypt/live/${WEBDOMAIN}*
+        rm -rf /etc/letsencrypt/archive/${WEBDOMAIN}*
+    fi
     sudo certbot --nginx --expand -d "${WEBDOMAIN}"
 fi
 }
