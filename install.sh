@@ -28,10 +28,10 @@ environment() {
     fi
     if [ ! -f docker-compose.yml ]; then
         cp docker-compose.yml.example docker-compose.yml
-    fi    
+    fi
 
     mkdir -p data
-    cp welcometext ./data/
+    cp welcometext ./data/data
 
     source .env
 
@@ -50,7 +50,7 @@ environment() {
         -e "s#SUPERUSER_PASSWORD=.*#SUPERUSER_PASSWORD=${SUPERUSER_PASSWORD}#g" \
         -e "s#DOMAIN=.*#DOMAIN=${WEBDOMAIN}#g" \
         -e "s#WEBDOMAIN=.*#WEBDOMAIN=${WEBDOMAIN}#g" \
-        -e "s#MUMBLE_REGISTERNAME=.*#MUMBLE_REGISTERNAME=${MUMBLE_REGISTERNAME}#g" \
+        -e "s#MUMBLE_REGISTERNAME=.*#MUMBLE_REGISTERNAME=\"${MUMBLE_REGISTERNAME}\"#g" \
         -e "s#USERS=.*#MUMBLE_USERS=${MUMBLE_USERS}#g" \
         -e "s#TCPPORT=.*#TCPPORT=${TCPPORT}#g" \
         -e "s#UDPPORT=.*#UDPPORT=${TCPPORT}#g" \

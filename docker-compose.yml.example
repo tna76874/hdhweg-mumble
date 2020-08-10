@@ -15,7 +15,7 @@ services:
       - MUMBLE_CERTFILE=/etc/letsencrypt/live/${WEBDOMAIN}/fullchain.pem
       - MUMBLE_KEYFILE=/etc/letsencrypt/live/${WEBDOMAIN}/privkey.pem
     volumes:
-      - ./data:/data
+      - ./data/data:/data
       - /etc/letsencrypt/live/${WEBDOMAIN}/fullchain.pem:/etc/letsencrypt/live/${WEBDOMAIN}/fullchain.pem
       - /etc/letsencrypt/live/${WEBDOMAIN}/privkey.pem:/etc/letsencrypt/live/${WEBDOMAIN}/privkey.pem
   mumbleweb:
@@ -26,10 +26,3 @@ services:
     ports:
       - 127.0.0.1:${WEBPORT}:8080
     restart: always
-  websockify:
-    image: efrecon/websockify
-    container_name: websockify
-    restart: always
-    command: --ssl-target 64737 mumble:64738
-    ports:
-      - 127.0.0.1:64737:64737 
